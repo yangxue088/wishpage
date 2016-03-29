@@ -36,7 +36,7 @@ def download():
     finally:
         zfile.close()
 
-    response = send_file(zfilename)
+    response = send_file(zfilename, attachment_filename=zfile.filename)
     return response
 
 
