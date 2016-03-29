@@ -36,7 +36,7 @@ def download():
     finally:
         zfile.close()
 
-    response = send_file(zfilename, attachment_filename=zfile.filename)
+    response = send_file(zfilename, as_attachment=True, attachment_filename='{}.zip'.format(id))
     return response
 
 
@@ -101,4 +101,4 @@ def parse_response(url, body):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)
