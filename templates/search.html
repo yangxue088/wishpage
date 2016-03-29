@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Wish Easy Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+{% macro display(value='') -%}
+{% if value is string and value.lower().startswith('http') %}
+<a href="{{value}}" target="_blank">{{value}}</a>
+{% else %}
+<strong>{{value}}</strong>
+{% endif %}
+{%- endmacro %}
+
+{% macro li(name, value='') -%}
+<li style="padding-top:10px">
+    <span>
+        <p>{{name}}</p>
+
+        {% if value.__iter__ is defined %}
+            {% for val in value %}
+                {{ display(val) }}<br>
+            {% endfor %}
+        {% else %}
+            {{ display(value) }}
+        {% endif %}
+
+        {% if name is string and name.startswith('产品图片') %}
+            <a href="javascript:void(0);">打包下载</a>
+        {% endif %}
+    </span>
+</li>
+{%- endmacro %}
+
+<div class="container">
+    <h3>输入产品地址进行搜索</h3>
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search for...">
+          <span class="input-group-btn">
+            <button class="btn btn-success" type="button">Just Do It!</button>
+          </span>
+    </div>
+
+    <div style="padding:30px 15px">
+        <ul class="list-group text-left">
+            {% if dict is defined and dict is not none %}
+                {% for name, value in dict.items() %}
+                    {{ li(name, value) }}
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="hidden">
+        <form action="download" method="post">
+            <input type="text" name="id" value="{{ id }}">
+            <textarea name="hrefs"></textarea>
+        </form>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+
+        $("button").click(function(){
+            $.post("search",
+              {
+                url:$("input").val()
+              },
+              function(html){
+              $("body").html(html);
+              });
+        });
+
+        $("a:contains('打包下载')").click(function(){
+            var links = $(this).siblings('a');
+
+            var hrefs = [];
+            for(var i = 0, n = links.length; i < n; i++){
+                var link = links[i];
+                hrefs.push($(link).attr('href'));
+            }
+
+            $("textarea").val(hrefs);
+
+            $("form").submit();
+
+        });
+
+    });
+
+
+</script>
+
+</body>
+</html>
