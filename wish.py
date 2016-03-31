@@ -21,13 +21,13 @@ def index():
 
 @app.route('/download', methods=['POST', 'GET'])
 def download():
-    id = request.values.get('id')
+    filename = request.values.get('filename')
     hrefs = request.values.get('hrefs').split(',')
 
     if not os.path.exists('target'):
         os.mkdir('target')
 
-    zfilename = os.path.join('target', '{}.zip'.format(id))
+    zfilename = os.path.join('target', '{}.zip'.format(filename))
     zfile = zipfile.ZipFile(zfilename, 'w')
 
     try:
@@ -36,7 +36,7 @@ def download():
     finally:
         zfile.close()
 
-    response = send_file(zfilename, as_attachment=True, attachment_filename='{}.zip'.format(id))
+    response = send_file(zfilename, as_attachment=True, attachment_filename='{}.zip'.format(filename))
     return response
 
 
@@ -94,8 +94,11 @@ def parse_response(url, body):
 
         kvs['卖家标签'] = ', '.join(tag['name'] for tag in data['merchant_tags'])
 
-        kvs['产品图片地址'] = ['https://contestimg.wish.com/api/webimage/{}-{}-original.jpg'.format(data['id'], i) for i in
-                         range(0, len(data['extra_photo_urls']))]
+        kvs['产品图片地址'] = sorted([photo_url.replace('small.jpg', 'origin.jpg') for photo_url in data['extra_photo_urls'].values() if
+                         photo_url.endswith('small.jpg')])
+
+        kvs['卖家评价图片'] = sorted([photo_url[:photo_url.index('&')] for photo_url in data['extra_photo_urls'].values() if
+                         '&' in photo_url and '=' in photo_url])
 
     return kvs
 

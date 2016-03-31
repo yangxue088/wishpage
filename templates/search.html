@@ -40,7 +40,7 @@
             {{ display(value) }}
         {% endif %}
 
-        {% if name is string and name.startswith('产品图片') %}
+        {% if name is string and '图片' in name %}
             <a href="javascript:void(0);">打包下载</a>
         {% endif %}
     </span>
@@ -68,7 +68,7 @@
 
     <div class="hidden">
         <form action="download" method="post">
-            <input type="text" name="id" value="{{ id }}">
+            <input type="text" id="id" name="filename" value="{{ id }}">
             <textarea name="hrefs"></textarea>
         </form>
     </div>
@@ -101,6 +101,13 @@
             for(var i = 0, n = links.length; i < n; i++){
                 var link = links[i];
                 hrefs.push($(link).attr('href'));
+            }
+
+            if($(this).siblings('p').text() == '产品图片地址'){
+                $("#id").val('{{ id }}' + '-product');
+            }
+            else if($(this).siblings('p').text() == '卖家评价图片'){
+                $("#id").val('{{ id }}' + '-rating');
             }
 
             $("textarea").val(hrefs);
