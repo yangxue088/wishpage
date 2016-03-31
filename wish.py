@@ -97,7 +97,7 @@ def parse_response(url, body):
         kvs['产品图片地址'] = sorted([photo_url.replace('small.jpg', 'origin.jpg') for photo_url in data['extra_photo_urls'].values() if
                          photo_url.endswith('small.jpg')])
 
-        kvs['卖家评价图片'] = sorted([photo_url[:photo_url.index('&')] for photo_url in data['extra_photo_urls'].values() if
+        kvs['买家评价图片'] = sorted([photo_url[:photo_url.index('&')] for photo_url in data['extra_photo_urls'].values() if
                          '&' in photo_url and '=' in photo_url])
 
     return kvs
