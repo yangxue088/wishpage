@@ -97,22 +97,24 @@
         $("a:contains('打包下载')").click(function(){
             var links = $(this).siblings('a');
 
-            var hrefs = [];
-            for(var i = 0, n = links.length; i < n; i++){
-                var link = links[i];
-                hrefs.push($(link).attr('href'));
-            }
+            if(links.length > 0){            
+                var hrefs = [];
+                for(var i = 0, n = links.length; i < n; i++){
+                    var link = links[i];
+                    hrefs.push($(link).attr('href'));
+                }
 
-            if($(this).siblings('p').text() == '产品图片地址'){
-                $("#id").val('{{ id }}' + '-product');
-            }
-            else if($(this).siblings('p').text() == '买家评价图片'){
-                $("#id").val('{{ id }}' + '-rating');
-            }
+                if($(this).siblings('p').text() == '产品图片地址'){
+                    $("#id").val('{{ id }}' + '-product');
+                }
+                else if($(this).siblings('p').text() == '买家评价图片'){
+                    $("#id").val('{{ id }}' + '-rating');
+                }
 
-            $("textarea").val(hrefs);
+                $("textarea").val(hrefs);
 
-            $("form").submit();
+                $("form").submit();
+            }
 
         });
 
