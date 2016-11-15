@@ -54,13 +54,9 @@ class KMatch(object):
         excepts = []
         asin_map = {}
 
-        firefox_profile = webdriver.FirefoxProfile()
-
-        # firefox_profile.set_preference("network.proxy.type", 1)
-        # firefox_profile.set_preference("network.proxy.socks", '127.0.0.1')
-        # firefox_profile.set_preference("network.proxy.socks_port", 1080)
-
-        browser = webdriver.Firefox(firefox_profile=firefox_profile)
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--proxy-server=socks5://127.0.0.1:1080")
+        browser = webdriver.Chrome('/home/mike/bin/chromedriver', chrome_options=chrome_options)
         browser.get(site)
 
         for word in words:
