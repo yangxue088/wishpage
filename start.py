@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import multiprocessing
 import time
+import urllib2
 
-from pip._vendor import requests
 from selenium import webdriver
 
 import amazon
@@ -18,12 +18,11 @@ if __name__ == '__main__':
     p.start()
 
     while True:
-        time.sleep(1)
         try:
-            request = requests.get('http://127.0.0.1:5000')
-            if request.status_code == 200:
-                print('test web server successful...')
-                break
+            time.sleep(1)
+            urllib2.urlopen('http://127.0.0.1:5000')
+            print('test web server successful...')
+            break
         except:
             pass
 
