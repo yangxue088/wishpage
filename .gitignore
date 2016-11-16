@@ -87,3 +87,5 @@ ENV/
 .spyderproject
 
 .idea/
+logs/
+requirement.txt
