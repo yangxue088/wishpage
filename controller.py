@@ -36,7 +36,7 @@ def send_mail_message(sender, receipt, subject, content):
               "text": content})
 
 
-@app.route('/mail')
+@app.route('/mail', methods=['POST', 'GET'])
 def mail():
     return render_template('mail.html', dict=None)
 
@@ -44,8 +44,8 @@ def mail():
 @app.route('/send', methods=['POST', 'GET'])
 def send_mail():
     sender = request.values.get('sender')
-    receipts = filter(lambda receipt: len(receipt) > 0, json.loads(request.values.get('receipt')))
-    subject = request.values.get('receipt')
+    receipts = filter(lambda receipt: len(receipt) > 0, json.loads(request.values.get('receipts')))
+    subject = request.values.get('subject')
     content = request.values.get('content')
 
     for receipt in receipts:
