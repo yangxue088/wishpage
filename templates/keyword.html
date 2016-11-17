@@ -103,7 +103,7 @@ $(document).ready(function() {
 	    $("#result").hide();
         waitingDialog.show('Just waiting...');
 
-		$.post("send", {
+		$.post("search", {
 				asin: $("#asin").val(),
 				site: $("select").val(),
 				asins: JSON.stringify($("#asins").val().split('\n')),
