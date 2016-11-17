@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mail Send Program</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h3>邮件发送</h3>
+
+    <br/><br/>
+
+    <label>输入发件人：</label>
+    <input type="text" placeholder="" id="sender"/>
+    <br/><br/>
+
+    <label>输入收件人：</label>
+    <br/>
+    <textarea id="receipts" style="width: 1050px; height: 230px;"></textarea>
+    <br/><br/>
+
+    <label>输入邮件主题：</label>
+    <input type="text" placeholder=""  style="width: 950px;" id="subject"/>
+    <br/><br/>
+
+    <label>输入邮件内容：</label>
+    <br/>
+    <textarea id="content" style="width: 1050px; height: 230px;"></textarea>
+    <br/><br/>
+
+    <button class="btn btn-success" type="button" id="sendBtn">Just Do It!</button>
+    <br/><br/><br/><br/>
+
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='bootstrap-waitingfor.min.js') }}"></script>
+<script>
+
+$(document).ready(function() {
+
+	$("#sendBtn").click(function() {
+        waitingDialog.show('Just waiting...');
+
+		$.post("send", {
+				sender: $("#sender").val(),
+				receipts: JSON.stringify($("#receipts").val().split('\n')),
+				subject: $("#subject").val(),
+				content: $("#content").val()
+			},
+			function(num) {
+			    waitingDialog.hide();
+			    alert('已成功发送'+num+'封邮件！')
+			});
+	});
+
+})
+
+</script>
+
+</body>
+</html>

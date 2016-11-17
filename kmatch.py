@@ -155,8 +155,6 @@ class KMatch(object):
                 except:
                     print 'check except:', word
                     excepts.append(word)
-
-                    raise
                 finally:
                     odwords.add(word.lower())
 
