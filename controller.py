@@ -52,7 +52,7 @@ def send_mail():
         send_mail_message(sender, receipt, subject, content)
         print "send mail:", receipt
 
-    return len(receipts)
+    return str(len(receipts))
 
 
 if __name__ == '__main__':
