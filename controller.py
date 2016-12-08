@@ -5,6 +5,7 @@ import requests
 from flask import Flask, request
 from flask import render_template
 
+import krank
 from kmatch import KMatch
 
 app = Flask(__name__)
@@ -12,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('keyword.html', dict=None)
+    return render_template('relevance.html', dict=None)
 
 
 @app.route('/search', methods=['POST', 'GET'])
@@ -53,6 +54,21 @@ def send_mail():
         print "send mail:", receipt
 
     return str(len(receipts))
+
+
+@app.route('/rank', methods=['POST', 'GET'])
+def rank():
+    return render_template('rank.html', dict=None)
+
+
+@app.route('/rank/search', methods=['POST', 'GET'])
+def do_rank_search():
+    asin = request.values.get('asin')
+    site = request.values.get('site')
+    keywords = filter(lambda keyword: len(keyword) > 0, json.loads(request.values.get('keywords')))
+
+    data = krank.search(asin, site, keywords)
+    return json.dumps(data)
 
 
 if __name__ == '__main__':

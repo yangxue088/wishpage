@@ -32,5 +32,5 @@ if __name__ == "__main__":
     print 'open browser to request...'
     chrome_options = webdriver.ChromeOptions()
     browser = webdriver.Chrome('/home/mike/bin/chromedriver', chrome_options=chrome_options)
-    browser.get('http://127.0.0.1:5000/mail')
+    browser.get('http://127.0.0.1:5000/rank')
     browser.maximize_window()

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Amazon Keyword Rank Program</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h3>亚马逊关键词排名搜索</h3>
+
+    <br/><br/>
+
+    <label>输入ASIN：</label>
+    <input type="text" placeholder="Search for..." id="asin"/>
+    <br/><br/>
+
+    <label>选择站点：</label>
+    <select class="selectpicker">
+        <option value="https://www.amazon.co.uk">英国站</option>
+        <option value="https://www.amazon.de">德国站</option>
+        <option value="https://www.amazon.fr">法国站</option>
+        <option value="https://www.amazon.it">意大利站</option>
+        <option value="https://www.amazon.es">西班牙站</option>
+        <option value="https://www.amazon.com">美国站</option>
+    </select>
+
+    <br/><br/>
+
+    <label>输入关键词（一行一个）：</label>
+    <br/>
+    <textarea id="keywords" style="width: 1050px; height: 563px; margin: 0px;"></textarea>
+    <br/><br/>
+
+    <button class="btn btn-success" type="button" id="searchBtn">Just Do It!</button>
+    <br/><br/><br/><br/>
+
+    <div id="result" style="display:none;">
+        <label>匹配结果：</label>
+        <br/>
+        <table id="table"
+               data-toggle="table"
+               data-search="true"
+               data-show-refresh="true"
+               data-show-toggle="true"
+               data-show-columns="true"
+               data-show-export="true">
+            <thead>
+            <tr>
+                <th data-field="word" data-sortable="true">关键词</th>
+                <th data-field="page" data-sortable="true">页数</th>
+                <th data-field="position" data-sortable="true">排位</th>
+                <th data-field="is_sponsored" data-sortable="true">是否广告</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+<script src="{{ url_for('static', filename='bootstrap-table-export.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap-waitingfor.min.js') }}"></script>
+<script>
+
+$(document).ready(function() {
+
+	$("#searchBtn").click(function() {
+	    $("#result").hide();
+        waitingDialog.show('Just waiting...');
+
+		$.post("rank/search", {
+				asin: $("#asin").val(),
+				site: $("select").val(),
+				keywords: JSON.stringify($("#keywords").val().split('\n'))
+			},
+			function(data) {
+			    waitingDialog.hide();
+				$('#table').bootstrapTable('load', JSON.parse(data));
+				$("#result").show();
+			});
+	});
+
+})
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,31 +1,12 @@
 # -*- coding: utf-8 -*-
-import datetime
-import sys
 import time
 
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-
-class Logger(object):
-    def __init__(self, asin, site):
-        self.terminal = sys.stdout
-        filename = "./logs/{}-{}-{}.log".format(asin, site, datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-        dir = os.path.dirname(filename)
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-
-        self.log = open(filename, "w")
-
-    def write(self, message):
-        self.terminal.write(message)
-        self.log.write(message)
-
-    def flush(self):
-        pass
+import logutil
 
 
 class KMatch(object):
@@ -34,20 +15,17 @@ class KMatch(object):
 
     def match(self, id, site, asins, words):
 
-        sys.stdout = Logger(id, site[site.rfind('.') + 1:].upper())
+        logger = logutil.get_logger(id, site, 'relevance')
 
-        print 'site:', site
-        print
+        logger.info('site: ' + site)
 
-        print 'words:'
+        logger.info('words: ')
         for word in words:
-            print word
-        print
+            logger.info(word)
 
-        print 'asins:'
+        logger.info('asins: ')
         for asn in asins:
-            print asn
-        print
+            logger.info(asn)
 
         odwords = set()
         results = []
@@ -85,7 +63,7 @@ class KMatch(object):
                         correct = browser.find_element_by_xpath("//span[@id='didYouMean']/a[1]").text
 
                         words.append(correct)
-                        print 'correct from: {}, to: {}'.format(word, correct)
+                        logger.info('correct from: {}, to: {}'.format(word, correct))
 
                         continue
                     except:
@@ -103,16 +81,16 @@ class KMatch(object):
 
                                 if len(suggest_word.strip()) == 0:
                                     words.append(word)
-                                    print 'return to waiting list:', word
+                                    logger.info('return to waiting list: ' + word)
                                     word = ''
                                     break
 
                                 words.append(suggest_word)
-                                print 'short from: {}, to: {}'.format(word, suggest_word)
+                                logger.info('short from: {}, to: {}'.format(word, suggest_word))
 
                             continue
                     except:
-                        print 'nothing long word: {}'.format(word)
+                        logger.info('nothing long word: {}'.format(word))
                         pass
 
                     meet = 0
@@ -137,7 +115,7 @@ class KMatch(object):
                                             asin_map[asn] = 0
                                         finally:
                                             words.append(link.get_attribute('title'))
-                                            print 'append from: {}, to: {}'.format(asn, link.get_attribute('title'))
+                                            logger.info('append from: {}, to: {}'.format(asn, link.get_attribute('title')))
 
                                     reviews += asin_map[asn]
                                     meet += 1
@@ -151,26 +129,24 @@ class KMatch(object):
                             pass
 
                     results.append((reviews, meet, word, brands))
-                    print 'check: {}, match: {}, reviews: {}'.format(word, meet, reviews)
+                    logger.info('check: {}, match: {}, reviews: {}'.format(word, meet, reviews))
                 except:
-                    print 'check except:', word
+                    plogger.info('check except:' + word)
                     excepts.append(word)
                 finally:
                     odwords.add(word.lower())
 
         browser.quit()
 
-        print ""
-        print '------------------------------------------'
-        print 'hoho, except word as below:'
-        print '------------------------------------------'
+        logger.info('------------------------------------------')
+        logger.info('hoho, except word as below:')
+        logger.info('------------------------------------------')
         for word in excepts:
-            print word
+            logger.info(word)
 
-        print ""
-        print '------------------------------------------'
-        print 'yeah, check word as below:'
-        print '------------------------------------------'
+        logger.info('------------------------------------------')
+        logger.info('yeah, check word as below:')
+        logger.info('------------------------------------------')
         results.sort(reverse=True)
 
         data = []
@@ -178,10 +154,10 @@ class KMatch(object):
         for result in filter(lambda r: r[1] > 2 and len(r[3]) > 1 and len(r[2].split(' ')) < 8, results):
             if len(result[3]) > 0 and any(brand.lower() in result[2].lower() for brand in result[3] if len(brand) > 0):
                 isbrand = True
-                print "{}| {}| {} -- {} -- *".format(result[0], result[1], result[2], ', '.join(result[3]))
+                logger.info("{}| {}| {} -- {} -- *".format(result[0], result[1], result[2], ', '.join(result[3])))
             else:
                 isbrand = False
-                print "{}| {}| {} -- {}".format(result[0], result[1], result[2], ', '.join(result[3]))
+                logger.info("{}| {}| {} -- {}".format(result[0], result[1], result[2], ', '.join(result[3])))
 
             data.append({"review": result[0], "meet": result[1], "word": result[2], "brand": ', '.join(result[3]), "isbrand": isbrand})
 
