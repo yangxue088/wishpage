@@ -85,7 +85,7 @@ def search(asin, site, words):
                         logger.info('word: {}, cur page: {}, except click'.format(word, page))
                         break
             except:
-                logger.info('check except:', word)
+                logger.info('check except:' + word)
             finally:
                 odwords.add(word.lower())
 
