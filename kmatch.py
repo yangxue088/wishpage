@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+import logging
+import logging.config
 import time
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-
-import logutil
 
 
 class KMatch(object):
@@ -15,7 +15,8 @@ class KMatch(object):
 
     def match(self, id, site, asins, words):
 
-        logger = logutil.get_logger(id, site, 'relevance')
+        logging.config.fileConfig('logging.conf', defaults={'type': 'relevance'})
+        logger = logging.getLogger('mylogger')
 
         logger.info('site: ' + site)
 

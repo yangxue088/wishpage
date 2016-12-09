@@ -1,6 +1,5 @@
+# -*- coding: utf-8 -*-
 
-import logutil
+import krank
 
-logger = logutil.get_logger('a', 's', 'rank')
-
-logger.info('test')
+print krank.search('B01LXHSQXQ', 'http://www.amazon.de', ['gartensäge', ])

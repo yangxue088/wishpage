@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-
+import logging
+import logging.config
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
-import logutil
-
 
 def search(asin, site, words):
-    logger = logutil.get_logger(asin, site, 'rank')
+    logging.config.fileConfig('logging.conf', defaults={'type': 'rank'})
+    logger = logging.getLogger('mylogger')
 
     logger.info('site: ' + site)
     logger.info('asin: ' + asin)
