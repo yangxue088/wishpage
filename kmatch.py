@@ -18,6 +18,7 @@ class KMatch(object):
         logging.config.fileConfig('logging.conf', defaults={'type': 'relevance'})
         logger = logging.getLogger('mylogger')
 
+        logger.info('################################################')
         logger.info('site: ' + site)
 
         logger.info('words: ')

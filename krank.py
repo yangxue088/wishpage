@@ -12,6 +12,7 @@ def search(asin, site, words):
     logging.config.fileConfig('logging.conf', defaults={'type': 'rank'})
     logger = logging.getLogger('mylogger')
 
+    logger.info('################################################')
     logger.info('site: ' + site)
     logger.info('asin: ' + asin)
     logger.info('words:')
