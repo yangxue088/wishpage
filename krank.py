@@ -34,6 +34,7 @@ def search(asin, site, words):
                 browser.find_element_by_name('site-search').submit()
 
                 dl = 0
+                cl = True
                 for count in range(1, 21):
 
                     wait = WebDriverWait(browser, 10)
@@ -68,7 +69,28 @@ def search(asin, site, words):
                         else:
                             position += 1
 
-                    if dl == 2:
+                    # 遍历侧边栏
+                    try:
+                        if cl:
+                            links = browser.find_elements_by_xpath(
+                                "//div[contains(@class,'pa-ad-details')]/div[@class='a-section']/div[@class='a-section a-spacing-none pa-str-truncate']/a")
+
+                            if len(links) == 0:
+                                raise
+
+                            for link in links:
+                                href = link.get_attribute('href')
+                                if asin in href:
+                                    results.append({"word": word, "page": page, "position": 0, "is_sponsored": True})
+                                    logger.info(
+                                        'check: {}, page: {}, position: {}, is_sponsored: {}'.format(word, page, 0, True))
+                                    cl = False
+                                    break
+                    except:
+                        if page == 1:
+                            cl = False
+
+                    if dl == 2 and not cl:
                         break
 
                     # 下一页
