@@ -133,7 +133,7 @@ class KMatch(object):
                     results.append((reviews, meet, word, brands))
                     logger.info('check: {}, match: {}, reviews: {}'.format(word, meet, reviews))
                 except:
-                    plogger.info('check except:' + word)
+                    logger.info('check except:' + word)
                     excepts.append(word)
                 finally:
                     odwords.add(word.lower())
