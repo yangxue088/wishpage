@@ -36,10 +36,15 @@ def search(asin, site, words):
 
                 dl = 0
                 cl = True
+                result_count = 0
                 for count in range(1, 21):
 
                     wait = WebDriverWait(browser, 10)
                     wait.until(expected_conditions.text_to_be_present_in_element((By.CLASS_NAME, "pagnCur"), str(count)))
+
+                    if count == 1:
+                        result_count_text = browser.find_element_by_id('s-result-count').text.split(' ')[2]
+                        result_count = int(result_count_text.replace(',', '').replace('.', ''))
 
                     browser.execute_script('''window.scrollTo(0, document.body.scrollHeight);''')
 
@@ -62,9 +67,12 @@ def search(asin, site, words):
                             except:
                                 is_sponsored = False
                             finally:
-                                results.append({"word": word, "page": page, "position": position, "is_sponsored": is_sponsored})
+                                results.append({"word": word, "page": page, "position": position, "is_sponsored": is_sponsored,
+                                                "result_num": result_count})
                                 logger.info(
-                                    'check: {}, page: {}, position: {}, is_sponsored: {}'.format(word, page, position, is_sponsored))
+                                    'check: {}, page: {}, position: {}, is_sponsored: {}, result_num: {}'.format(word, page, position,
+                                                                                                                 is_sponsored,
+                                                                                                                 result_count))
 
                                 dl += 1
                         else:
@@ -82,9 +90,11 @@ def search(asin, site, words):
                             for link in links:
                                 href = link.get_attribute('href')
                                 if asin in href:
-                                    results.append({"word": word, "page": page, "position": 0, "is_sponsored": True})
+                                    results.append(
+                                        {"word": word, "page": page, "position": 0, "is_sponsored": True, "result_num": result_count})
                                     logger.info(
-                                        'check: {}, page: {}, position: {}, is_sponsored: {}'.format(word, page, 0, True))
+                                        'check: {}, page: {}, position: {}, is_sponsored: {}, result_num: {}'.format(word, page, 0, True,
+                                                                                                                     result_count))
                                     cl = False
                                     break
                     except:
@@ -114,7 +124,8 @@ def search(asin, site, words):
 
     logger.info('\n\ncheck word results:')
     for result in results:
-        logger.info('{}, {}, {}, {}'.format(result['word'], result['page'], result['position'], result['is_sponsored']))
+        logger.info(
+            '{}, {}, {}, {}, {}'.format(result['word'], result['page'], result['position'], result['is_sponsored'], result['result_num']))
 
     browser.quit()
 
