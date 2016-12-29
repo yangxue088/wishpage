@@ -110,9 +110,13 @@ $(document).ready(function() {
 
         site = $("#site").val();
         if (site != '--') {
-            if (site == 'UK' || site == 'US') {
+            if (site == 'UK') {
                 subject = "Amazon Product Review Invitation -- " + product;
                 content = "Dear Sir/Madam,\n\nThank you for your time.\n\nWe are an Amazon Seller in United Kingdom.\n\nI have gone through your information on Amazon Top Reviewers list, and consider you are a reliable, objective, and experienced shopper and reviewer.\n\nTherefore, I sincerely invite to you try -- " + product + " -- in our store and share your reviews on Amazon.\n\nWe will give you discount 99% off of the price.\n\nThe following is our item link https://www.amazon.co.uk/dp/"+ asin + "\n\nDear if you are interested in it please let me know.\n\nAlso I wonder some question if you like it.\n\nCan you take the pictures or the video on the review?\n\nAnd how long you will give the review after receive the package?\n\nAny question just let me know.\n\nAlice";
+            }
+            else if (site == 'US') {
+                subject = "Amazon Product Review Invitation -- " + product;
+                content = "Dear Sir/Madam,\n\nThank you for your time.\n\nWe are an Amazon Seller in United States.\n\nI have gone through your information on Amazon Top Reviewers list, and consider you are a reliable, objective, and experienced shopper and reviewer.\n\nTherefore, I sincerely invite to you try -- " + product + " -- in our store and share your reviews on Amazon.\n\nWe will give you discount 99% off of the price.\n\nThe following is our item link https://www.amazon.com/dp/"+ asin + "\n\nDear if you are interested in it please let me know.\n\nAlso I wonder some question if you like it.\n\nCan you take the pictures or the video on the review?\n\nAnd how long you will give the review after receive the package?\n\nAny question just let me know.\n\nAlice";
             }
             else if (site == 'DE') {
                 subject = "Amazon Produkt Bewertung Einladung -- " + product;
