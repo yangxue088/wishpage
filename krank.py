@@ -117,8 +117,11 @@ def search(asin, site, words):
                     except:
                         logger.info('word: {}, cur page: {}, except click'.format(word, page))
                         break
-            except:
+            except Exception as e:
                 logger.info('check except:' + word)
+                logger.error(str(e))
+
+                browser.get(site)
             finally:
                 odwords.add(word.lower())
 

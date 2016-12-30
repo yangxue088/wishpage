@@ -132,9 +132,12 @@ class KMatch(object):
 
                     results.append((reviews, meet, word, brands))
                     logger.info('check: {}, match: {}, reviews: {}'.format(word, meet, reviews))
-                except:
+                except Exception as e:
                     logger.info('check except:' + word)
+                    logger.info(str(e))
                     excepts.append(word)
+
+                    browser.get(site)
                 finally:
                     odwords.add(word.lower())
 
