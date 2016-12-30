@@ -7,6 +7,7 @@ from flask import render_template
 
 import krank
 from kmatch import KMatch
+from kthief import find_chief
 
 app = Flask(__name__)
 
@@ -68,6 +69,21 @@ def do_rank_search():
     keywords = filter(lambda keyword: len(keyword) > 0, json.loads(request.values.get('keywords')))
 
     data = krank.search(asin, site, keywords)
+    return json.dumps(data)
+
+
+@app.route('/thief', methods=['POST', 'GET'])
+def thief():
+    return render_template('thief.html', dict=None)
+
+
+@app.route('/thief/find', methods=['POST', 'GET'])
+def find_thief():
+    sites = filter(lambda site: len(site) > 0, json.loads(request.values.get('sites')))
+    asins = filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))
+    included = request.values.get('included')
+
+    data = find_chief(sites, asins, included)
     return json.dumps(data)
 
 
