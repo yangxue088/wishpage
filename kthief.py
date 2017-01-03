@@ -47,15 +47,12 @@ def find_chief(sites, asins, included=False):
                                      browser.find_elements_by_xpath('''//h3[contains(@class, 'olpSellerName')]//a''')]))
             seller_names.sort()
 
-            if included:
-                thieves.append({'asin': asin, 'site': site, 'seller': ', '.join(seller_names), 'url': url})
-            elif len(filter(lambda seller: seller.upper() not in our_seller, seller_names)) > 0:
-                thieves.append({'asin': asin, 'site': site, 'seller': ', '.join(seller_names), 'url': url})
+            print 'asin: {}, seller:[{}]'.format(asin, seller_names)
 
-        if len(thieves) > 0:
-            for thief in thieves:
+            if included or len(filter(lambda seller: seller.upper() not in our_seller, seller_names)) > 0:
+                thieves.append({'asin': asin, 'site': site, 'seller': ', '.join(seller_names), 'url': url})
                 logger.info(
-                    'find chief: {}, site: {}, seller: [{}], url: {}'.format(thief['asin'], thief['site'], thief['seller'], thief['url']))
+                    'find chief: {}, site: {}, seller: [{}], url: {}'.format(asin, site, ', '.join(seller_names), url))
 
     browser.quit()
 

@@ -4,6 +4,7 @@ import json
 import requests
 from flask import Flask, request
 from flask import render_template
+from werkzeug.exceptions import abort
 
 import krank
 from kmatch import KMatch
@@ -81,10 +82,13 @@ def thief():
 def find_thief():
     sites = filter(lambda site: len(site) > 0, json.loads(request.values.get('sites')))
     asins = filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))
-    included = request.values.get('included')
+    included = True if request.values.get('included') == 'true' else False
 
-    data = find_chief(sites, asins, included)
-    return json.dumps(data)
+    try:
+        data = find_chief(sites, asins, included)
+        return json.dumps(data)
+    except:
+        abort(501)
 
 
 if __name__ == '__main__':
