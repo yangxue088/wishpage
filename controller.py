@@ -36,7 +36,7 @@ def send_mail_message(sender, receipt, subject, content):
         data={"from": sender,
               "to": receipt,
               "subject": subject,
-              "text": content})
+              "text": content}, timeout=10)
 
 
 @app.route('/mail', methods=['POST', 'GET'])
@@ -52,8 +52,11 @@ def send_mail():
     content = request.values.get('content')
 
     for receipt in receipts:
-        send_mail_message(sender, receipt, subject, content)
-        print "send mail:", receipt
+        try:
+            send_mail_message(sender, receipt, subject, content)
+            print "send mail:", receipt
+        except:
+            continue
 
     return str(len(receipts))
 
