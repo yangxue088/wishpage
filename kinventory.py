@@ -33,7 +33,7 @@ def check_product_inventory(sites, asins):
                 except:
                     try:
                         rank = browser.find_element_by_xpath(
-                            '''//div[@id='detail_bullets_id']//a[contains(@href,'bestsellers')]/ancestor::li''').text
+                            '''//div[contains(@id, 'detail')]//a[contains(@href,'bestsellers')]/ancestor::li''').text
                     except:
                         pass
                 finally:
