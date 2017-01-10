@@ -27,6 +27,19 @@ def check_product_inventory(sites, asins):
                 browser.get(url)
                 logger.info('current url: ' + url)
 
+                rank = ''
+                try:
+                    rank = browser.find_element_by_xpath('''//div[@id='prodDetails']//a[contains(@href,'bestsellers')]/ancestor::td''').text
+                except:
+                    try:
+                        rank = browser.find_element_by_xpath(
+                            '''//div[@id='detail_bullets_id']//a[contains(@href,'bestsellers')]/ancestor::li''').text
+                    except:
+                        pass
+                finally:
+                    if len(rank) == 0:
+                        rank = '-'
+
                 browser.find_element_by_id('add-to-cart-button').click()
 
                 while True:
@@ -57,7 +70,8 @@ def check_product_inventory(sites, asins):
 
                 logger.info('inventory: ' + inventory)
                 logger.info('message: ' + message)
-                results.append({'time': ctime, 'site': site, 'asin': asin, 'url': url, 'inventory': inventory, 'message': message})
+                results.append(
+                    {'time': ctime, 'site': site, 'asin': asin, 'url': url, 'rank': rank, 'inventory': inventory, 'message': message})
 
                 while True:
                     try:
@@ -72,7 +86,7 @@ def check_product_inventory(sites, asins):
                         time.sleep(1)
 
             except:
-                results.append({'time': ctime, 'site': site, 'asin': asin, 'url': url, 'inventory': 0, 'message': '-'})
+                results.append({'time': ctime, 'site': site, 'asin': asin, 'url': url, 'rank': rank, 'inventory': 0, 'message': '-'})
                 logger.info('product can not check inventory, url: ' + url)
 
     browser.quit()
@@ -87,11 +101,11 @@ def check_product_inventory(sites, asins):
         writer = csv.writer(file)
 
         if len(file.readlines()) == 0:
-
-            writer.writerow(['时间', '站点', 'ASIN', '链接', '库存', '提示'])
+            writer.writerow(['时间', '站点', 'ASIN', '链接', '排名', '库存', '提示'])
 
         for result in results:
-            writer.writerow([result['time'], result['site'], result['asin'], result['url'], result['inventory'], result['message']])
+            writer.writerow(
+                [result['time'], result['site'], result['asin'], result['url'], result['rank'], result['inventory'], result['message']])
 
     logger.info('generate inventory report finish, site: {}, asins: {}'.format(site, ', '.join(asins)))
     return results
