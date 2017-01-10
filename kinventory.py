@@ -108,12 +108,12 @@ def check_product_inventory(sites, asins):
         writer = csv.writer(file)
 
         if len(file.readlines()) == 0:
-            writer.writerow(['时间', '站点', 'ASIN', '链接', '价格', '库存', '提示', '排名'])
+            writer.writerow(['时间', '站点', 'ASIN', '链接', '价格', '库存', '排名', '提示'])
 
         for result in results:
             writer.writerow(
-                [result['time'], result['site'], result['asin'], result['url'], result['price'], result['inventory'], result['message'],
-                 result['rank']])
+                [result['time'], result['site'], result['asin'], result['url'], result['price'], result['inventory'],
+                 result['rank'], result['message']])
 
     logger.info('generate inventory report finish, site: {}, asins: {}'.format(site, ', '.join(asins)))
     return results
