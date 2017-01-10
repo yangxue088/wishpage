@@ -86,7 +86,8 @@ def check_product_inventory(sites, asins):
         writer = csv.writer(file)
 
         if len(file.readlines()) == 0:
-            writer.writerow(['time', 'site', 'asin', 'url', 'inventory', 'message'])
+
+            writer.writerow(['时间', '站点', 'ASIN', '链接', '库存', '提示'])
 
         for result in results:
             writer.writerow([result['time'], result['site'], result['asin'], result['url'], result['inventory'], result['message']])

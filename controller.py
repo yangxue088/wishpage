@@ -107,7 +107,7 @@ def check_inventory():
 
     try:
         results = check_product_inventory(sites, asins)
-        return results
+        return json.dumps(results)
     except:
         abort(501)
 
