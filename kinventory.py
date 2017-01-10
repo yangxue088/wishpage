@@ -27,19 +27,6 @@ def check_product_inventory(sites, asins):
                 browser.get(url)
                 logger.info('current url: ' + url)
 
-                price = ''
-                try:
-                    price = browser.find_element_by_id('priceblock_saleprice').text
-                except:
-                    try:
-                        price = browser.find_element_by_id('priceblock_ourprice').text
-                    except:
-                        pass
-                finally:
-                    if len(price) == 0:
-                        price = '-'
-                logger.info('price: ' + price)
-
                 rank = ''
                 try:
                     rank = browser.find_element_by_xpath('''//div[@id='prodDetails']//a[contains(@href,'bestsellers')]/ancestor::td''').text
@@ -68,6 +55,9 @@ def check_product_inventory(sites, asins):
                         break
                     except:
                         time.sleep(1)
+
+                price = browser.find_element_by_class_name('sc-product-price').text
+                logger.info('price: ' + price)
 
                 while True:
                     try:
