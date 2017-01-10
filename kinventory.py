@@ -27,10 +27,18 @@ def check_product_inventory(sites, asins):
                 browser.get(url)
                 logger.info('current url: ' + url)
 
+                price = ''
                 try:
-                    price = browser.find_element_by_id('priceblock_ourprice').text
+                    price = browser.find_element_by_id('priceblock_saleprice').text
                 except:
-                    price = '-'
+                    try:
+                        price = browser.find_element_by_id('priceblock_ourprice').text
+                    except:
+                        pass
+                finally:
+                    if len(price) == 0:
+                        price = '-'
+                logger.info('price: ' + price)
 
                 rank = ''
                 try:
@@ -44,6 +52,7 @@ def check_product_inventory(sites, asins):
                 finally:
                     if len(rank) == 0:
                         rank = '-'
+                logger.info('rank: ' + rank)
 
                 browser.find_element_by_id('add-to-cart-button').click()
 
