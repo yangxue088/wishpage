@@ -72,6 +72,7 @@ def check_product_inventory(sites, asins):
                         time.sleep(1)
 
             except:
+                results.append({'time': ctime, 'site': site, 'asin': asin, 'url': url, 'inventory': 0, 'message': '-'})
                 logger.info('product can not check inventory, url: ' + url)
 
     browser.quit()
