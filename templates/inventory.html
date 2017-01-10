@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Check Inventory Program</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h3>测库存</h3>
+
+    <br/><br/>
+
+    <label>选择站点：</label>
+    <input style="margin-left: 10px;margin-right: 5px;" name="sites" type="checkbox" value="www.amazon.co.uk" />英国站
+    <input style="margin-left: 10px;margin-right: 5px;" name="sites" type="checkbox" value="www.amazon.de" />德国站
+    <input style="margin-left: 10px;margin-right: 5px;" name="sites" type="checkbox" value="www.amazon.fr" />法国站
+    <input style="margin-left: 10px;margin-right: 5px;" name="sites" type="checkbox" value="www.amazon.es" />西班牙站
+    <input style="margin-left: 10px;margin-right: 5px;" name="sites" type="checkbox" value="www.amazon.it" />意大利站
+    <input style="margin-left: 10px;margin-right: 5px;" name="sites" type="checkbox" value="www.amazon.com" />美国站
+    <br/><br/>
+
+    <label>输入ASIN（一行一个）：</label>
+    <br/>
+    <textarea id="asins" style="width: 1050px; height: 450px;"></textarea>
+    <br/><br/>
+
+    <button class="btn btn-success" type="button" id="sendBtn">Just Do It!</button>
+    <br/><br/><br/><br/>
+
+    <div id="result" style="display:none;">
+        <label>库存：</label>
+        <br/>
+        <table id="table"
+               data-toggle="table"
+               data-search="true"
+               data-show-refresh="true"
+               data-show-toggle="true"
+               data-show-columns="true"
+               data-show-export="true">
+            <thead>
+            <tr>
+                <th data-field="time" data-sortable="true">时间</th>
+                <th data-field="site" data-sortable="true">站点</th>
+                <th data-field="asin" data-sortable="true">ASIN</th>
+                <th data-field="url" data-sortable="true" data-formatter="linkFormatter">链接</th>
+                <th data-field="inventory" data-sortable="true">库存</th>
+                <th data-field="message" data-sortable="true">提示</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+</div>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+<script src="{{ url_for('static', filename='bootstrap-table-export.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap-waitingfor.min.js') }}"></script>
+<script>
+
+function linkFormatter(value, row) {
+	return '<a href="' + value + '" target="_blank">' + value + '</a>';
+}
+
+$(document).ready(function() {
+
+	$("#sendBtn").click(function() {
+		sites = JSON.stringify($("input[name='sites']:checked").map(function() {
+			return this.value;
+		}).get());
+		asins = JSON.stringify($("#asins").val().split('\n'));
+
+		if (sites.length > 0 && asins.length > 0) {
+
+			$("#result").hide();
+			waitingDialog.show('Just waiting...');
+
+			$.post("inventory/check", {
+					sites: sites,
+					asins: asins
+				},
+				function(data) {
+					waitingDialog.hide();
+					$('#table').bootstrapTable('load', JSON.parse(data));
+					$("#result").show();
+				});
+		}
+	});
+
+})
+
+
+</script>
+
+</body>
+</html>

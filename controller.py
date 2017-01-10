@@ -7,6 +7,7 @@ from flask import render_template
 from werkzeug.exceptions import abort
 
 import krank
+from kinventory import check_product_inventory
 from kmatch import KMatch
 from kthief import find_chief
 
@@ -90,6 +91,23 @@ def find_thief():
     try:
         data = find_chief(sites, asins, included)
         return json.dumps(data)
+    except:
+        abort(501)
+
+
+@app.route('/inventory', methods=['POST', 'GET'])
+def inventory():
+    return render_template('inventory.html', dict=None)
+
+
+@app.route('/inventory/check', methods=['POST', 'GET'])
+def check_inventory():
+    sites = filter(lambda site: len(site) > 0, json.loads(request.values.get('sites')))
+    asins = filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))
+
+    try:
+        results = check_product_inventory(sites, asins)
+        return results
     except:
         abort(501)
 
