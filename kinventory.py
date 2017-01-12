@@ -55,7 +55,7 @@ def check_product_inventory(sites, asins):
 
                 browser.find_element_by_id('add-to-cart-button').click()
 
-                while True:
+                for x in range(1, 10):
                     try:
                         browser.get('https://{}/gp/cart/view.html'.format(site))
                         browser.find_element_by_xpath('''//span[@data-action="a-dropdown-button"]''').click()
@@ -63,10 +63,18 @@ def check_product_inventory(sites, asins):
                         browser.find_element_by_name('quantityBox').clear()
                         browser.find_element_by_name('quantityBox').send_keys('999')
                         browser.find_element_by_xpath('''//a[@data-action="update"]''').click()
+                        suc = True
 
                         break
                     except:
-                        time.sleep(1)
+                        time.sleep(2)
+                        if x == 3:
+                            suc = False
+                            break
+
+                if not suc:
+                    logger.error('product inventory can not check')
+                    continue
 
                 price = browser.find_element_by_class_name('sc-product-price').text
                 logger.info('price: ' + price)
