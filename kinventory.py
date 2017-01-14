@@ -29,7 +29,7 @@ def check_product_inventory(sites, asins):
 
                 merchant = '-'
                 try:
-                    merchants = browser.find_elements_by_xpath('''//*[@id='merchant-info']/a''')
+                    merchants = browser.find_elements_by_xpath('''//*[@id='merchant-info']//a''')
                     if len(merchants) != 2:
                         logger.error('product is not FBA')
                         continue
@@ -54,6 +54,19 @@ def check_product_inventory(sites, asins):
                 logger.info('rank: ' + rank)
 
                 browser.find_element_by_id('add-to-cart-button').click()
+                time.sleep(1)
+
+                try:
+                    if browser.find_element_by_id('btnVasModalSkip').is_displayed():
+                        browser.find_element_by_id('btnVasModalSkip').find_element_by_tag_name('input').click()
+                except:
+                    pass
+
+                try:
+                    if browser.find_element_by_id('siNoCoverage').is_displayed():
+                        browser.find_element_by_id('siNoCoverage-announce').click()
+                except:
+                    pass
 
                 for x in range(1, 10):
                     try:
