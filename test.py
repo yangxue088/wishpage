@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import krank
+import kinventory
 
-# print krank.search('B01M9JNFZC', 'http://www.amazon.com', ['selfie ring light', ])
-
-print krank.search('B01LXHSQXQ', 'http://www.amazon.de', ['handsäge', ])
+print kinventory.check_product_inventory(['www.amazon.com'], ['B00RMNBNRW'])
