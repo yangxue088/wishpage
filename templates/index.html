@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Amazon Programs By Mike</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div id="canvas-wrap">
+    <canvas id="cov" width="800" height="600"></canvas>
+
+    <div id="overlay" class="container">
+
+        <h3>Mike的小程序目录</h3>
+
+        <br/><br/>
+
+        <table id="table"
+               data-toggle="table"
+               data-search="true"
+               data-show-refresh="true"
+               data-show-toggle="true"
+               data-show-columns="true">
+            <thead>
+            <tr>
+                <th data-field="name" data-sortable="true">简称</th>
+                <th data-field="url" data-sortable="true" data-formatter="linkFormatter">链接</th>
+                <th data-field="description" data-sortable="true">说明</th>
+            </tr>
+            </thead>
+        </table>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+<script src="{{ url_for('static', filename='bootstrap-table-export.js') }}"></script>
+<script src="{{ url_for('static', filename='bootstrap-waitingfor.min.js') }}"></script>
+<script src="{{ url_for('static', filename='qarticles.min.js') }}"></script>
+<script>
+
+(function (global) {
+    var speed = 40
+    if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+        speed = 200
+    }
+    var covColorFuc = function (dot, w, h) {
+        return `rgba(${Math.floor(255 * (1 - dot.x / w))}, ${Math.floor(255 * (1 - dot.y / h))},${Math.floor(255 * (dot.speedArr[0]/ 100))}, 0.8)`
+    }
+    var lineColorFuc = function (dot, w, h) {
+        return `rgba(${Math.floor(255 * (1 - dot.x / w))}, ${Math.floor(255 * (1 - dot.y / h))},${Math.floor(255 * (dot.speedArr[0]/ 100))}, 0.4)`
+    }
+    var covSpeedFuc = (speed) => {
+        return  speed * (Math.random() * 2 - 1)
+    }
+    var options = {
+        lineLink: {
+            count: 2,
+            show: true
+        },
+        color: {
+            dotColorFuc: covColorFuc,
+            lineColorFuc: lineColorFuc,
+        },
+        dot: {
+            physical: true,
+            speed: speed,
+            vxFuc: covSpeedFuc,
+            vyFuc: covSpeedFuc,
+            count: 80,
+            size: {
+                random: true,
+                max: 20,
+                min: 0
+            }
+        }
+
+    }
+
+    var qarticles = new Qarticles(document.getElementById('cov'), options)
+})(window);
+
+function linkFormatter(value, row) {
+	return '<a href="' + value + '" target="_blank">' + value + '</a>';
+}
+
+$(document).ready(function() {
+
+    data = [];
+    data.push({'name': '库存', 'url': '/inventory', 'description':'进行库存和排名的抓取'});
+    data.push({'name': '相关度', 'url': '/relevance', 'description':'根据ASIN和关键词进行相关度匹配'});
+    data.push({'name': '邮件', 'url': '/mail', 'description':'进行测评邮件的发送'});
+    data.push({'name': '排名', 'url': '/rank', 'description':'搜索前台获取关键词的排位信息'});
+    data.push({'name': '跟卖', 'url': '/thief', 'description':'获取跟卖信息'});
+
+
+    $('#table').bootstrapTable('load', data);
+
+})
+
+
+</script>
+
+</body>
+</html>

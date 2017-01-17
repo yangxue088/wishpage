@@ -78,7 +78,7 @@ $(document).ready(function() {
 	$("#sendBtn").click(function() {
         waitingDialog.show('Just waiting...');
 
-		$.post("send", {
+		$.post("mail/send", {
 				sender: $("#sender").val(),
 				receipts: JSON.stringify($("#receipts").val().split('\n')),
 				subject: $("#subject").val(),

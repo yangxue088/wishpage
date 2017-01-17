@@ -1,6 +1,11 @@
+#canvas-wrap { position:relative; } /* Make this a positioned parent */
+
+#overlay     { position:absolute; top:200px; left:400px; background-color: #C1E6C6;}
+
 body {
-  padding-top: 50px;
+  padding-top: 0px;
 }
+
 .main-container {
   padding: 40px 15px;
   text-align: center;

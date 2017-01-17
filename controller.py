@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import json
 
-import requests
 from flask import Flask, request
 from flask import render_template
 from werkzeug.exceptions import abort
 
 import krank
 from kinventory import check_product_inventory
+from kmail import send_mail_message
 from kmatch import KMatch
 from kthief import find_chief
 
@@ -16,11 +16,16 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return render_template('index.html', dict=None)
+
+
+@app.route('/relevance')
+def relevance():
     return render_template('relevance.html', dict=None)
 
 
-@app.route('/search', methods=['POST', 'GET'])
-def search():
+@app.route('/relevance/match', methods=['POST', 'GET'])
+def relevance_match():
     asin = request.values.get('asin')
     site = request.values.get('site')
     asins = filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))
@@ -30,23 +35,13 @@ def search():
     return json.dumps(data)
 
 
-def send_mail_message(sender, receipt, subject, content):
-    return requests.post(
-        "https://api.mailgun.net/v3/tjchtech.com/messages",
-        auth=("api", "key-b6139f5afd5b82a73a810724b263b380"),
-        data={"from": sender,
-              "to": receipt,
-              "subject": subject,
-              "text": content}, timeout=10)
-
-
 @app.route('/mail', methods=['POST', 'GET'])
 def mail():
     return render_template('mail.html', dict=None)
 
 
-@app.route('/send', methods=['POST', 'GET'])
-def send_mail():
+@app.route('/mail/send', methods=['POST', 'GET'])
+def mail_send():
     sender = request.values.get('sender')
     receipts = filter(lambda receipt: len(receipt) > 0, json.loads(request.values.get('receipts')))
     subject = request.values.get('subject')
@@ -68,7 +63,7 @@ def rank():
 
 
 @app.route('/rank/search', methods=['POST', 'GET'])
-def do_rank_search():
+def rank_search():
     asin = request.values.get('asin')
     site = request.values.get('site')
     keywords = filter(lambda keyword: len(keyword) > 0, json.loads(request.values.get('keywords')))
@@ -83,7 +78,7 @@ def thief():
 
 
 @app.route('/thief/find', methods=['POST', 'GET'])
-def find_thief():
+def thief_find():
     sites = filter(lambda site: len(site) > 0, json.loads(request.values.get('sites')))
     asins = filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))
     included = True if request.values.get('included') == 'true' else False
@@ -101,7 +96,7 @@ def inventory():
 
 
 @app.route('/inventory/check', methods=['POST', 'GET'])
-def check_inventory():
+def inventory_check():
     sites = filter(lambda site: len(site) > 0, json.loads(request.values.get('sites')))
     asins = filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))
 
