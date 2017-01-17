@@ -34,6 +34,11 @@
     <input style="margin-left: 10px;margin-right: 5px;" name="sites" type="checkbox" value="www.amazon.com" />美国站
     <br/><br/>
 
+    <label>扩展子ASIN：</label>
+    <input style="margin-left: 10px;margin-right: 5px;" name="included" type="radio" value="no" checked/>不扩展
+    <input style="margin-left: 10px;margin-right: 5px;" name="included" type="radio" value="yes"/>扩展
+    <br/><br/>
+
     <label>输入ASIN（一行一个）：</label>
     <br/>
     <textarea id="asins" style="width: 1050px; height: 450px;"></textarea>
@@ -95,6 +100,7 @@ $(document).ready(function() {
 			return this.value;
 		}).get());
 		asins = JSON.stringify($("#asins").val().split('\n'));
+		child = $('input[name="included"]:checked').val() == 'yes' ? true : false;
 
 		if (sites.length > 0 && asins.length > 0) {
 
@@ -103,7 +109,8 @@ $(document).ready(function() {
 
 			$.post("inventory/check", {
 					sites: sites,
-					asins: asins
+					asins: asins,
+					child: child
 				},
 				function(data) {
 					waitingDialog.hide();

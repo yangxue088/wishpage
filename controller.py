@@ -98,10 +98,11 @@ def inventory():
 @app.route('/inventory/check', methods=['POST', 'GET'])
 def inventory_check():
     sites = filter(lambda site: len(site) > 0, json.loads(request.values.get('sites')))
-    asins = filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))
+    asins = list(set(filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))))
+    child = True if request.values.get('child') == 'true' else False
 
     try:
-        results = check_product_inventory(sites, asins)
+        results = check_product_inventory(sites, asins, child)
         return json.dumps(results)
     except:
         abort(501)

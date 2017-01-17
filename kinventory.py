@@ -9,7 +9,7 @@ import os
 from selenium import webdriver
 
 
-def check_product_inventory(sites, asins):
+def check_product_inventory(sites, asins, child):
     logging.config.fileConfig('logging.conf', defaults={'type': 'inventory'})
     logger = logging.getLogger('mylogger')
 
@@ -20,12 +20,31 @@ def check_product_inventory(sites, asins):
     results = []
     ctime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+
     for site in sites:
-        for asin in asins:
+
+        index = 0
+        while index < len(asins):
+            asin = asins[index]
+            index += 1
+
             try:
                 url = 'https://{}/dp/{}'.format(site, asin)
                 browser.get(url)
                 logger.info('current url: ' + url)
+
+                # 扩展到其他子ASIN
+                if child:
+                    try:
+                        child_asins = [elem.get_attribute('data-defaultasin') for elem in
+                                       browser.find_elements_by_xpath('''//*[@data-defaultasin]''')]
+                        extend_asins = [child_asin for child_asin in child_asins if child_asin not in asins]
+
+                        if len(extend_asins) > 0:
+                            asins.extend(extend_asins)
+                            logger.info('extend asin from: {}, extend: {}'.format(asin, extend_asins))
+                    except:
+                        pass
 
                 merchant = '-'
                 try:
