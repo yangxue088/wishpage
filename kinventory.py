@@ -18,8 +18,6 @@ def check_product_inventory(sites, asins, child):
     browser = webdriver.Chrome('/home/mike/bin/chromedriver', chrome_options=chrome_options)
 
     results = []
-    ctime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
 
     for site in sites:
 
@@ -28,6 +26,7 @@ def check_product_inventory(sites, asins, child):
             asin = asins[index]
             index += 1
 
+            ctime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             try:
                 url = 'https://{}/dp/{}'.format(site, asin)
                 browser.get(url)
