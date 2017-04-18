@@ -7,6 +7,7 @@ from werkzeug.exceptions import abort
 
 import krank
 from kinventory import check_product_inventory
+from klisting import get_listing_info
 from kmail import send_mail_message
 from kmatch import KMatch
 from kthief import find_chief
@@ -103,6 +104,24 @@ def inventory_check():
 
     try:
         results = check_product_inventory(sites, asins, child)
+        return json.dumps(results)
+    except:
+        abort(501)
+
+
+@app.route('/listing', methods=['POST', 'GET'])
+def listing():
+    return render_template('listing.html', dict=None)
+
+
+@app.route('/listing/get', methods=['POST', 'GET'])
+def listing_get():
+    sites = filter(lambda site: len(site) > 0, json.loads(request.values.get('sites')))
+    asins = list(set(filter(lambda asin: len(asin) > 0, json.loads(request.values.get('asins')))))
+    child = True if request.values.get('child') == 'true' else False
+
+    try:
+        results = get_listing_info(sites, asins, child)
         return json.dumps(results)
     except:
         abort(501)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import kinventory
+import krank
 
-print kinventory.check_product_inventory(['www.amazon.com'], ['B00RMNBNRW'])
+print krank.search('B06XF12L6R', 'http://www.amazon.com', ['Tire Pressure Gauge'])
