@@ -43,12 +43,19 @@ def get_listing_info(sites, asins, child):
                         pass
 
                 merchant = '-'
+                is_fba = '-'
                 try:
                     merchants = browser.find_elements_by_xpath('''//*[@id='merchant-info']//a''')
                     merchant = merchants[0].text
+
+                    if len(merchants) < 2:
+                        is_fba = 'False'
+                    else:
+                        is_fba = 'True'
                 except:
                     pass
                 logger.info('merchant: ' + merchant)
+                logger.info('是否FBA: ' + is_fba)
 
                 review_count = '-'
                 try:
@@ -101,13 +108,13 @@ def get_listing_info(sites, asins, child):
                     {'time': ctime, 'site': site, 'asin': asin, 'url': url, 'merchant': merchant, 'review_count': review_count,
                      'review_rate': review_rate,
                      'price': price, 'title': title,
-                     'rank': rank})
+                     'rank': rank, 'is_fba': is_fba})
             except:
                 results.append(
                     {'time': ctime, 'site': site, 'asin': asin, 'url': url, 'merchant': '-', 'review_count': '-',
                      'review_rate': '-',
                      'price': '-', 'title': '-',
-                     'rank': '-'})
+                     'rank': '-', 'is_fba': is_fba})
                 logger.info('product can not get listing info, url: ' + url)
 
     browser.quit()
